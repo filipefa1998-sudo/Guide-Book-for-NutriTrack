@@ -449,9 +449,14 @@ body{
     padding:9px;border-radius:40px;}
   .screen{border-radius:32px;}
 
-  /* center slides (cover / feature map / steps / close) scroll if tall */
+  /* center slides (cover / steps / close) scroll if tall */
   .slide.center{align-items:center;overflow-y:auto;-webkit-overflow-scrolling:touch;}
   .slide.center .slide-inner{height:auto;min-height:100%;padding:8px 0;}
+
+  /* slide 3 (feature map) only: prevent the top of the title being clipped
+     when the grid is taller than the screen */
+  .slide.center.featmap{align-items:flex-start;}
+  .slide.center.featmap .slide-inner{min-height:0;margin:auto;}
 
   .cover-ring{width:170px;height:170px;margin-bottom:1.4rem;}
   .cover-cnum{font-size:1.9rem;}
@@ -558,7 +563,7 @@ body{
 </section>
 
 <!-- ============ 3 · FEATURE MAP ============ -->
-<section class="slide center">
+<section class="slide center featmap">
   <div class="slide-inner">
     <div class="reveal" style="margin-bottom:2.2rem">
       <div class="kicker" style="margin:0 auto 1rem;display:inline-flex"><span class="dot"></span>Everything Inside</div>
@@ -1140,6 +1145,7 @@ function go(n){
   // force reflow so CSS entrance animations restart
   const s=slides[idx];
   void s.offsetWidth;
+  s.scrollTop=0; // start tall/scrollable slides at the top
   s.classList.add('active');
   dots[idx].classList.add('on');
   curEl.textContent=String(idx+1).padStart(2,'0');
