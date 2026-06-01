@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#050608">
 <title>NutriTrack Pro — Product Walkthrough</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
@@ -44,7 +45,7 @@ body{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
 
 /* ====== DECK / SLIDES ====== */
-.deck{position:relative;z-index:2;height:100vh;width:100vw;}
+.deck{position:relative;z-index:2;height:100vh;height:100dvh;width:100vw;}
 .slide{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
   padding:clamp(20px,5vw,70px) clamp(24px,7vw,110px);}
 .slide.active{display:flex;}
@@ -405,14 +406,80 @@ body{
   animation:hintfade 5s ease forwards 3s;}
 @keyframes hintfade{to{opacity:0;}}
 
+/* ===== TABLET / SMALL LAPTOP ===== */
 @media(max-width:920px){
   .slide-inner{grid-template-columns:1fr;gap:24px;}
   .stage{order:-1;}
-  .phone{width:240px;height:496px;}
+  .phone{width:260px;height:536px;}
   .copy{text-align:center;margin:0 auto;}
   .points{text-align:left;max-width:380px;margin:0 auto;}
   .featgrid{grid-template-columns:repeat(2,1fr);}
   .dots{display:none;}
+}
+
+/* ===== PHONES (portrait) ===== */
+@media(max-width:640px){
+  .dots{display:none;}
+  .hint{display:none;}
+  .bg-grid{background-size:40px 40px;}
+
+  /* each slide is a single screen-height column, content centered,
+     with room reserved for the bottom nav chrome + safe area */
+  .slide{padding:calc(env(safe-area-inset-top,0px) + 14px) 18px
+                 calc(env(safe-area-inset-bottom,0px) + 78px);
+         align-items:flex-start;}
+  .slide-inner{grid-template-columns:1fr;gap:14px;height:100%;
+    align-content:center;justify-items:center;}
+  .slide.center .slide-inner{justify-content:center;}
+
+  /* phone-demo slides: compact copy on top, big readable mockup below */
+  .copy{text-align:center;margin:0;max-width:520px;}
+  .kicker{margin-bottom:.7rem;font-size:.6rem;padding:5px 12px;}
+  .headline{font-size:clamp(1.45rem,7vw,2rem);margin-bottom:.55rem;line-height:1.05;}
+  .lede{font-size:.9rem;line-height:1.45;margin-bottom:0;max-width:42ch;margin-left:auto;margin-right:auto;
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .points{display:none;}            /* the animated demo teaches the "how" */
+  .stage{order:2;width:100%;}
+  .stage::before{width:240px;height:240px;}
+
+  /* keep the in-app text the same readable size as desktop:
+     hold the phone near full width, let height flex to fit */
+  .phone{width:min(300px,84vw);height:auto;aspect-ratio:300/600;
+    max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 250px);
+    padding:9px;border-radius:40px;}
+  .screen{border-radius:32px;}
+
+  /* center slides (cover / feature map / steps / close) scroll if tall */
+  .slide.center{align-items:center;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  .slide.center .slide-inner{height:auto;min-height:100%;padding:8px 0;}
+
+  .cover-ring{width:170px;height:170px;margin-bottom:1.4rem;}
+  .cover-cnum{font-size:1.9rem;}
+  .cover-sub{font-size:.9rem;}
+  .featgrid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .feat{padding:14px 12px;}
+  .feat .fe{font-size:1.25rem;margin-bottom:6px;}
+  .feat .ft{font-size:.78rem;}
+  .feat .fd{font-size:.62rem;}
+  .steps{gap:10px;}
+  .step{padding:13px 15px;gap:12px;}
+  .step .no{width:36px;height:36px;font-size:1rem;}
+  .step .st-t{font-size:.9rem;}
+  .step .st-d{font-size:.74rem;}
+
+  /* chrome: compact, lifted above the home-bar safe area */
+  .chrome{padding:10px 16px calc(env(safe-area-inset-bottom,0px) + 10px);
+    background:linear-gradient(to top,rgba(5,6,8,.92),transparent);}
+  .brandmark{font-size:.72rem;}
+  .navbtns button{width:42px;height:42px;border-radius:11px;}
+  .counter{font-size:.72rem;min-width:46px;}
+}
+
+/* ===== SHORT PHONES (small/landscape) : trim hero copy further ===== */
+@media(max-width:640px) and (max-height:680px){
+  .lede{-webkit-line-clamp:2;font-size:.84rem;}
+  .headline{font-size:clamp(1.3rem,6.5vw,1.7rem);}
+  .phone{max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 190px);}
 }
 </style>
 </head>
@@ -1091,12 +1158,22 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Home')go(0);
   if(e.key==='End')go(total-1);
 });
-// touch swipe
-let tx=0;
-document.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+// touch: horizontal swipe + edge-tap to advance
+let tx=0,ty=0,tt=0;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;tt=Date.now();},{passive:true});
 document.addEventListener('touchend',e=>{
-  const dx=e.changedTouches[0].clientX-tx;
-  if(Math.abs(dx)>50)go(idx+(dx<0?1:-1));
+  if(e.target.closest&&e.target.closest('.chrome'))return; // let nav buttons work
+  const t=e.changedTouches[0];
+  const dx=t.clientX-tx, dy=t.clientY-ty, dt=Date.now()-tt;
+  // swipe (must be clearly horizontal so vertical scrolling still works)
+  if(Math.abs(dx)>45 && Math.abs(dx)>Math.abs(dy)*1.4){go(idx+(dx<0?1:-1));return;}
+  // tap on left/right edge of a demo slide to step through
+  if(Math.abs(dx)<12 && Math.abs(dy)<12 && dt<350 && !slides[idx].classList.contains('center')){
+    const w=window.innerWidth;
+    if(t.clientY > window.innerHeight-100) return; // avoid the chrome zone
+    if(t.clientX < w*0.30) go(idx-1);
+    else if(t.clientX > w*0.70) go(idx+1);
+  }
 },{passive:true});
 
 // kick off first slide
